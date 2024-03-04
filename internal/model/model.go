@@ -5,6 +5,7 @@ type Goods struct {
 	Note         string `json:"note"`
 	IsSpecial    bool   `json:"special"`
 	OriginCityID int    `json:"origin"`
+	BaseCount    int    `json:"count"`
 	BasePrice    []int  `json:"base"`
 }
 
