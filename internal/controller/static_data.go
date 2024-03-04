@@ -5,6 +5,8 @@ import (
 	"os"
 	"rsbackend/internal/model"
 	"sync"
+
+	"github.com/gofiber/fiber/v2/log"
 )
 
 type StaticData struct {
@@ -29,6 +31,10 @@ func NewStaticData(path string) *StaticData {
 
 // NewCity adds a new city to the CityList.
 func (sd *StaticData) NewCity(data *model.City) error {
+	if len(data.Distance) != len(sd.CityList)+1 {
+		log.Error("Invalid City Data!")
+		return os.ErrInvalid
+	}
 	sd.rwMutex.Lock()
 	defer sd.rwMutex.Unlock()
 	for i := range sd.CityList {

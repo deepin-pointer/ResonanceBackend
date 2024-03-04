@@ -35,7 +35,7 @@ func (s *Server) Run(port string) {
 	go s.dynamicData.LoggingWorker(s.logPath)
 
 	app := fiber.New()
-	app.Get("/", s.web)
+	app.Static("/", "./web")
 	app.Get("/static", s.static)
 	app.Get("/dynamic", s.dynamic)
 	app.Post("/report_price", s.reportPrice)
@@ -47,10 +47,6 @@ func (s *Server) Run(port string) {
 		Expiration: 5 * time.Second,
 	}))
 	log.Fatal(app.Listen(port))
-}
-
-func (s *Server) web(c *fiber.Ctx) error {
-	return c.SendString("UnderDevelop")
 }
 
 func (s *Server) static(c *fiber.Ctx) error {
