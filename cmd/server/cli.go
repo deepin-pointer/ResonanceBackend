@@ -11,9 +11,14 @@ func Run() {
 	app := &cli.App{
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "data",
-				Value: "data.json",
+				Name:  "static",
+				Value: "static.json",
 				Usage: "Path to static data file",
+			},
+			&cli.StringFlag{
+				Name:  "dynamic",
+				Value: "dynamic.bin",
+				Usage: "Path to dynamic data log file",
 			},
 			&cli.StringFlag{
 				Name:  "listen",
@@ -22,7 +27,7 @@ func Run() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			s := newServer(c.String("data"))
+			s := newServer(c.String("static"), c.String("dynamic"))
 			s.Run(c.String("listen"))
 			return nil
 		},

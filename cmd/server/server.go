@@ -16,9 +16,10 @@ import (
 type Server struct {
 	staticData  *controller.StaticData
 	dynamicData *controller.DynamicData
+	logPath     string
 }
 
-func newServer(staticDataPath string) *Server {
+func newServer(staticDataPath string, dynamicDataPath string) *Server {
 	staticData := controller.NewStaticData(staticDataPath)
 	return &Server{
 		staticData: staticData,
@@ -26,10 +27,13 @@ func newServer(staticDataPath string) *Server {
 			len(staticData.GoodsList),
 			len(staticData.CityList),
 		),
+		logPath: dynamicDataPath,
 	}
 }
 
 func (s *Server) Run(port string) {
+	go s.dynamicData.LoggingWorker(s.logPath)
+
 	app := fiber.New()
 	app.Get("/", s.web)
 	app.Get("/static", s.static)
@@ -66,7 +70,7 @@ func (s *Server) dynamic(c *fiber.Ctx) error {
 }
 
 func (s *Server) reportPrice(c *fiber.Ctx) error {
-	data := new(model.PriceRecord)
+	data := new([]model.PriceRecord)
 	c.BodyParser(data)
 	s.dynamicData.ModifyPrice(data)
 	return c.SendStatus(fiber.StatusOK)

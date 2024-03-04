@@ -36,16 +36,20 @@ func NewPriceMatrix(sizeRow, sizeColumn int) *PriceMatrix {
 }
 
 // Update price record in a thread-safe manner
-func (pm *PriceMatrix) UpdatePrice(row, column int, price int64) {
-	if row < 0 || row >= pm.sizeRow || column < 0 || column >= pm.sizeColumn {
-		// Illegal operation
-		return
+func (pm *PriceMatrix) UpdatePrice(prices []PriceRecord) {
+	for _, record := range prices {
+		if record.GoodsID < 0 || record.GoodsID >= pm.sizeRow || record.CityID < 0 || record.CityID >= pm.sizeColumn {
+			// Illegal operation
+			return
+		}
 	}
 	// Collision between price and time doesn't matter if they happen in short time
 	pm.rwMutex.RLock()
 	defer pm.rwMutex.RUnlock()
-	pm.data[row*pm.sizeColumn+column] = price
-	pm.data[pm.offset+row*pm.sizeColumn+column] = time.Now().Unix() // Record the current time of update
+	for _, record := range prices {
+		pm.data[record.GoodsID*pm.sizeColumn+record.CityID] = int64(record.Price)
+		pm.data[pm.offset+record.GoodsID*pm.sizeColumn+record.CityID] = time.Now().Unix() // Record the current time of update
+	}
 }
 
 // Expand size of the price matrix
