@@ -31,6 +31,9 @@ func NewStaticData(path string) *StaticData {
 func (sd *StaticData) NewCity(data *model.City) error {
 	sd.rwMutex.Lock()
 	defer sd.rwMutex.Unlock()
+	for i := range sd.CityList {
+		sd.CityList[i].Distance = append(sd.CityList[i].Distance, data.Distance[i])
+	}
 	sd.CityList = append(sd.CityList, data)
 	return sd.cacheData()
 }
