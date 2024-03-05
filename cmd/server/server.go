@@ -36,11 +36,11 @@ func (s *Server) Run(port string) {
 
 	app := fiber.New()
 	app.Static("/", "./web")
-	app.Get("/static", s.static)
-	app.Get("/dynamic", s.dynamic)
-	app.Post("/report_price", s.reportPrice)
-	app.Post("/new_city", s.newCity)
-	app.Post("/new_goods", s.newGoods)
+	app.Get("/api/static", s.static)
+	app.Get("/api/dynamic", s.dynamic)
+	app.Post("/api/report_price", s.reportPrice)
+	app.Post("/api/new_city", s.newCity)
+	app.Post("/api/new_goods", s.newGoods)
 
 	app.Use(limiter.New(limiter.Config{
 		Max:        2,
