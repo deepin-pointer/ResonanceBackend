@@ -31,6 +31,7 @@ func Run() error {
 		path := flags.String("config")
 		if path != "" {
 			viper.SetConfigFile(path)
+			viper.ReadInConfig()
 		}
 		s = newServer()
 		go s.Run(viper.GetString("bind"))

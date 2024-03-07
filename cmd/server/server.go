@@ -53,7 +53,7 @@ func (s *Server) Run(port string) {
 	s.fiberServer.Post("/api/report_price", s.reportPrice)
 
 	s.fiberServer.Use(jwtware.New(jwtware.Config{
-		SigningKey: jwtware.SigningKey{Key: viper.GetString("sign_key")},
+		SigningKey: jwtware.SigningKey{Key: []byte(viper.GetString("sign_key"))},
 	}))
 
 	s.fiberServer.Post("/api/new_city", s.newCity)
